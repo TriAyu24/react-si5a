@@ -4,6 +4,10 @@ import React, { Suspense } from "react";
 
 // { BrowserRouter as Router } mengimpor BrowserRouter dari pustaka react-router-dom dan memberinya alias Router. BrowserRouter adalah komponen yang membungkus seluruh aplikasi untuk menyediakan fitur routing.
 import { BrowserRouter as Router, Routes, Route, NavLink} from "react-router-dom";
+import Login from "./components/Login";
+import Logout from "./components/Logout";
+import PrivateRoute from "./components/PrivateRoute";
+
 
 // impor komponen 
 const Home = React.lazy(() => import("./components/Home"));
