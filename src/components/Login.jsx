@@ -7,25 +7,25 @@ function Login() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+ const handleLogin = async (e) => {
+  e.preventDefault();
 
-    try {
-      const response = await axios.post(
-        "https://newexpresssi5a-weld.vercel.app/api/auth/login",
-        {
-          email: email,
-          password: password,
-        }
-      );
+  try {
+    const response = await axios.post(
+      "https://newexpresssi5a-weld.vercel.app/api/auth/login",
+      {
+        email: email,
+        pass: password, 
+      }
+    );
 
-      localStorage.setItem("token", response.data.token);
-      alert("Login berhasil");
-      navigate("/");
-    } catch (error) {
-      alert("Email atau password salah");
-    }
-  };
+    localStorage.setItem("token", response.data.token);
+    alert("Login berhasil");
+    navigate("/");
+  } catch (error) {
+    alert("Email atau password salah");
+  }
+};
 
   return (
     <div>
