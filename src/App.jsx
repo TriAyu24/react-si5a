@@ -1,83 +1,168 @@
-// import React mengimpor modul React dari pustaka react.
-// { Suspense } mengimpor komponen Suspense dari pustaka React. Suspense digunakan untuk menunda rendering komponen hingga data atau kode yang diperlukan telah siap.
 import React, { Suspense } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  NavLink,
+} from "react-router-dom";
 
-// { BrowserRouter as Router } mengimpor BrowserRouter dari pustaka react-router-dom dan memberinya alias Router. BrowserRouter adalah komponen yang membungkus seluruh aplikasi untuk menyediakan fitur routing.
-import { BrowserRouter as Router, Routes, Route, NavLink} from "react-router-dom";
+// ===== IMPORT LOGIN & AUTH =====
 import Login from "./components/Login";
 import Logout from "./components/Logout";
 import PrivateRoute from "./components/PrivateRoute";
 
-
-// impor komponen 
+// ===== LAZY LOAD KOMPONEN =====
 const Home = React.lazy(() => import("./components/Home"));
-const FakultasList = React.lazy(() => import("./components/Fakultas/List"));
-const FakultasCreate = React.lazy(() => import("./components/Fakultas/Create"));
-const FakultasEdit = React.lazy(() => import("./components/Fakultas/Edit"));
-const ProdiList = React.lazy(() => import("./components/Prodi/List"));
-const ProdiCreate = React.lazy(() => import("./components/Prodi/Create"));
-const MahasiswaList = React.lazy(() => import("./components/Mahasiswa/List"));
-const MahasiswaCreate = React.lazy(() => import("./components/Mahasiswa/Create"));
-
+const FakultasList = React.lazy(() =>
+  import("./components/Fakultas/List")
+);
+const FakultasCreate = React.lazy(() =>
+  import("./components/Fakultas/Create")
+);
+const FakultasEdit = React.lazy(() =>
+  import("./components/Fakultas/Edit")
+);
+const ProdiList = React.lazy(() =>
+  import("./components/Prodi/List")
+);
+const ProdiCreate = React.lazy(() =>
+  import("./components/Prodi/Create")
+);
+const MahasiswaList = React.lazy(() =>
+  import("./components/Mahasiswa/List")
+);
+const MahasiswaCreate = React.lazy(() =>
+  import("./components/Mahasiswa/Create")
+);
 
 function App() {
   return (
     <Router>
+      {/* ===== NAVBAR ===== */}
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
         <div className="container-fluid">
-          <a className="navbar-brand" href="#">
-            Navbar
-          </a>
+          <span className="navbar-brand">PAW React</span>
+
           <button
             className="navbar-toggler"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
           >
             <span className="navbar-toggler-icon"></span>
           </button>
+
           <div className="collapse navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav">
+            <ul className="navbar-nav me-auto">
               <li className="nav-item">
-                <NavLink className="nav-link active" aria-current="page" to="/">
+                <NavLink className="nav-link" to="/">
                   Home
                 </NavLink>
               </li>
+
               <li className="nav-item">
                 <NavLink className="nav-link" to="/fakultas">
                   Fakultas
                 </NavLink>
               </li>
-               <li className="nav-item">
+
+              <li className="nav-item">
                 <NavLink className="nav-link" to="/prodi">
                   Program Studi
                 </NavLink>
               </li>
-                <li className="nav-item">
+
+              <li className="nav-item">
                 <NavLink className="nav-link" to="/mahasiswa">
                   Mahasiswa
                 </NavLink>
               </li>
             </ul>
+
+            {/* LOGOUT */}
+            <Logout />
           </div>
         </div>
       </nav>
-      {/* Kita bisa memberikan fallback (komponen pengganti) yang ditampilkan selama proses pemuatan. */}
+
+      {/* ===== ROUTING ===== */}
       <Suspense fallback={<div>Loading...</div>}>
-        {/* Routes mengimpor komponen Routes dari react-router-dom. Routes membungkus satu atau beberapa Route. Dengan menggunakan Routes, React akan mencari Route yang cocok dengan URL saat ini dan merender komponen yang sesuai. */}
         <Routes>
-          {/* Route mengimpor komponen Route dari react-router-dom. Route digunakan untuk mendefinisikan satu jalur (route) dalam aplikasi. */}
-          <Route path="/" element={<Home />} />
-          <Route path="/fakultas" element={<FakultasList />} />
-          <Route path="/fakultas/create" element={<FakultasCreate />} />
-          <Route path="/fakultas/edit/:id" element={<FakultasEdit />} />
-          <Route path="/prodi" element={<ProdiList />} />
-          <Route path="/prodi/create" element={<ProdiCreate />} />
-          <Route path="/mahasiswa" element={<MahasiswaList />} />
-          <Route path="/mahasiswa/create" element={<MahasiswaCreate />} />
+          {/* LOGIN (TIDAK DIPROTEKSI) */}
+          <Route path="/login" element={<Login />} />
+
+          {/* ===== SEMUA ROUTE DIPROTEKSI JWT ===== */}
+          <Route
+            path="/"
+            element={
+              <PrivateRoute>
+                <Home />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/fakultas"
+            element={
+              <PrivateRoute>
+                <FakultasList />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/fakultas/create"
+            element={
+              <PrivateRoute>
+                <FakultasCreate />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/fakultas/edit/:id"
+            element={
+              <PrivateRoute>
+                <FakultasEdit />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/prodi"
+            element={
+              <PrivateRoute>
+                <ProdiList />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/prodi/create"
+            element={
+              <PrivateRoute>
+                <ProdiCreate />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/mahasiswa"
+            element={
+              <PrivateRoute>
+                <MahasiswaList />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/mahasiswa/create"
+            element={
+              <PrivateRoute>
+                <MahasiswaCreate />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </Suspense>
     </Router>
